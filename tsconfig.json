@@ -1,0 +1,25 @@
+{
+  "include": [
+    "src",
+    "src/**/*.scss",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "files": [
+    "declarations.d.ts",
+    "./src/api/api.ts"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "sourceMap": true,
+    "module": "esnext",
+    "target": "es6",
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./"
+  }
+}

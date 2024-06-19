@@ -1,0 +1,74 @@
+.header {
+  display: flex;
+  height: 70px;
+  width: 100%;
+  flex-direction: column;
+  background-color: rgb(43, 43, 43);
+}
+
+.containerNavigation {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 35px;
+  border-bottom: 1px solid rgb(167, 167, 167);
+  width: 100%;
+
+  .GridOnIcon {
+    margin-left: 1rem;
+  }
+
+  svg {
+    color: rgb(201, 201, 201);
+    height: 20px;
+  }
+}
+
+.containerNameProject {
+  display: flex;
+  align-items: center;
+  height: 35px;
+  border-bottom: 1px solid rgb(167, 167, 167);
+  width: 100%;
+}
+
+.nameProject {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 1rem;
+  gap: 2px;
+  height: 100%;
+  width: 200px;
+  border-right: 1px solid rgb(167, 167, 167);
+  p {
+    color: rgb(167, 167, 167);
+    margin: 0;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+
+  .abbreviation {
+    font-size: 8px;
+  }
+
+  .expandMoreIcon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: rgb(167, 167, 167);
+  }
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+
+  .tab {
+    color: rgb(246, 246, 246);
+    padding: 10px;
+    border-right: 1px solid rgb(167, 167, 167);
+  }
+}

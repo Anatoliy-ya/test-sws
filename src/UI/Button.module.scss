@@ -1,0 +1,20 @@
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  button {
+    width: 100%;
+    height: 100%;
+    border: unset;
+    background-color: unset;
+    cursor: pointer;
+    color: rgb(201, 201, 201);
+  }
+
+  &.active button {
+    border-bottom: 1px solid rgb(246, 246, 246);
+    color: rgb(246, 246, 246);
+  }
+}
