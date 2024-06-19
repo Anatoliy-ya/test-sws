@@ -13,7 +13,7 @@ export const api = createApi({
     }),
     createRow: builder.mutation<
       DataRowProps,
-      { eID: string; row: Omit<DataRowProps, 'id' | 'children' | 'total'> }
+      { eID: number; row: Omit<DataRowProps, 'id' | 'child' | 'total'> }
     >({
       query: ({ eID, row }) => ({
         url: `v1/outlay-rows/entity/${eID}/row/create`,
@@ -21,12 +21,12 @@ export const api = createApi({
         body: row,
       }),
     }),
-    getRows: builder.query<DataRowProps[], string>({
+    getRows: builder.query<DataRowProps[], number>({
       query: (eID) => `v1/outlay-rows/entity/${eID}/row/list`,
     }),
     updateRow: builder.mutation<
       DataRowProps,
-      { eID: string; rID: string; data: Omit<DataRowProps, 'id' | 'children' | 'total'> }
+      { eID: string; rID: number; data: Omit<DataRowProps, 'id' | 'child' | 'total'> }
     >({
       query: ({ eID, rID, data }) => ({
         url: `v1/outlay-rows/entity/${eID}/row/${rID}/update`,
@@ -34,7 +34,7 @@ export const api = createApi({
         body: data,
       }),
     }),
-    deleteRow: builder.mutation<{ success: boolean }, { eID: string; rID: string }>({
+    deleteRow: builder.mutation<{ success: boolean }, { eID: number; rID: number }>({
       query: ({ eID, rID }) => ({
         url: `v1/outlay-rows/entity/${eID}/row/${rID}/delete`,
         method: 'DELETE',

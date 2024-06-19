@@ -5,14 +5,14 @@ import { DataRowProps } from '../types/types';
 import { useState } from 'react';
 
 interface RowProps extends DataRowProps {
-  onHandleDeleteRow: () => void;
-  onHandleCreateRow: () => void;
+  onHandleCreateRow: (idParent: number | null) => void;
+  onHandleDeleteRow: (id: number) => void;
   isActiveDelete: boolean;
 }
 export default function DataRow({
   id,
-  idParent,
-  children,
+  parentId,
+  child,
   rowName,
   equipmentCosts,
   estimatedProfit,
@@ -27,26 +27,54 @@ export default function DataRow({
   onHandleCreateRow,
   isActiveDelete,
 }: RowProps) {
+  const classDataRowChildren = `${styles.dataRow} ${styles.dataRowChildren}`;
+  const classDataRowIconChildren = `${
+    child && child.length > 0
+      ? styles.dataRowIcon
+      : `${styles.dataRowIcon} ${styles.dataRowIconChildren}`
+  }`;
+
+  const handleCreateRowWrapper = (parentId: number | null) => () => {
+    onHandleCreateRow(parentId);
+  };
+
   return (
-    <div className={styles.dataRow}>
-      <div className={styles.dataRowName}>
-        <div className={styles.dataRowIcon}>
-          <TextSnippetRoundedIcon
-            className={styles.textSnippetRoundedIcon}
-            onClick={onHandleCreateRow}
-          />
-          {isActiveDelete && (
-            <DeleteRoundedIcon className={styles.deleteRoundedIcon} onClick={onHandleDeleteRow} />
-          )}
+    <>
+      <div className={styles.dataRow}>
+        <div className={styles.dataRowName}>
+          <div className={classDataRowIconChildren}>
+            <TextSnippetRoundedIcon
+              className={styles.textSnippetRoundedIcon}
+              onClick={handleCreateRowWrapper(id)}
+            />
+            {isActiveDelete && (
+              <DeleteRoundedIcon
+                className={styles.deleteRoundedIcon}
+                onClick={() => onHandleDeleteRow(id)}
+              />
+            )}
+          </div>
+          <p>{rowName}</p>
         </div>
-        <p>{rowName}</p>
+        <div className={styles.dataRowData}>
+          <p>{salary}</p>
+          <p>{overheads}</p>
+          <p>{equipmentCosts}</p>
+          <p>{estimatedProfit}</p>
+        </div>
       </div>
-      <div className={styles.dataRowData}>
-        <p>{salary}</p>
-        <p>{overheads}</p>
-        <p>{equipmentCosts}</p>
-        <p>{estimatedProfit}</p>
+      <div className={classDataRowChildren}>
+        {child &&
+          child.map((childRow) => (
+            <DataRow
+              key={childRow.id}
+              {...childRow}
+              onHandleDeleteRow={() => onHandleDeleteRow(childRow.id)}
+              onHandleCreateRow={() => onHandleCreateRow(childRow.id)}
+              isActiveDelete={true}
+            />
+          ))}
       </div>
-    </div>
+    </>
   );
 }
