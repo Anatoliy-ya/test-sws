@@ -26,12 +26,12 @@ export const api = createApi({
     }),
     updateRow: builder.mutation<
       DataRowProps,
-      { eID: string; rID: number; data: Omit<DataRowProps, 'id' | 'child' | 'total'> }
+      { eID: number; rID: number; row: Omit<DataRowProps, 'id' | 'child' | 'total'> }
     >({
-      query: ({ eID, rID, data }) => ({
+      query: ({ eID, rID, row }) => ({
         url: `v1/outlay-rows/entity/${eID}/row/${rID}/update`,
         method: 'PUT',
-        body: data,
+        body: row,
       }),
     }),
     deleteRow: builder.mutation<{ success: boolean }, { eID: number; rID: number }>({

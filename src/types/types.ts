@@ -1,6 +1,6 @@
 export interface DataRowProps {
   id: number;
-  parentId: number | null;
+  parentId?: number | null;
   rowName: string;
   equipmentCosts: number;
   estimatedProfit: number;

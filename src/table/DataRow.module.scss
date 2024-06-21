@@ -3,11 +3,10 @@
   flex-direction: row;
   justify-content: space-between;
   border-bottom: 1px solid rgb(43, 43, 43);
-  height: 60px;
+  height: 40px;
   color: rgb(246, 246, 246);
 
   &.dataRowChildren {
-    border: none;
     flex-direction: column;
   }
 }
@@ -19,6 +18,7 @@
   background-color: rgb(43, 43, 43);
   padding: 2px;
   border-radius: 5px;
+  margin: 1rem 0;
 
   svg {
     height: 20px;
@@ -36,11 +36,12 @@
 .dataRowName {
   display: flex;
   align-items: center;
-  gap: 40px;
-  width: 200px;
+  gap: 30px;
+  width: 900px;
   padding-left: 10px;
   font-size: 12px;
   color: rgb(201, 201, 201);
+  justify-content: flex-start;
 }
 
 .dataRowData {
@@ -50,4 +51,14 @@
   padding-right: 120px;
   font-size: 12px;
   color: rgb(246, 246, 246);
+}
+
+.dataRowInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nameRowInput {
+  width: 750px;
 }
