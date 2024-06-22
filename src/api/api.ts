@@ -24,13 +24,11 @@ export const api = createApi({
     getRows: builder.query<DataRowProps[], number>({
       query: (eID) => `v1/outlay-rows/entity/${eID}/row/list`,
     }),
-    updateRow: builder.mutation<
-      DataRowProps,
-      { eID: number; rID: number; row: Omit<DataRowProps, 'id' | 'child' | 'total'> }
-    >({
+    // prettier-ignore
+    updateRow: builder.mutation<DataRowProps,{ eID: number; rID: number; row: Omit<DataRowProps, 'id' | 'child' | 'total'> }>({
       query: ({ eID, rID, row }) => ({
         url: `v1/outlay-rows/entity/${eID}/row/${rID}/update`,
-        method: 'PUT',
+        method: 'POST',
         body: row,
       }),
     }),

@@ -13,4 +13,5 @@ export interface DataRowProps {
   supportCosts: number;
   total: number;
   child?: DataRowProps[];
+  level?: number;
 }

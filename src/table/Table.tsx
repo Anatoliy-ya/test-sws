@@ -88,9 +88,8 @@ export default function Table() {
     if (data) {
       console.log('Fetched data:', data);
       console.log('Fetched eID:', eID);
-      // const treeRows = buildTree(data);
-      // console.log('Tree rows:', treeRows);
-      dispatch(setRows(data));
+      const treeRows = buildTree(data);
+      dispatch(setRows(treeRows));
     }
   }, [data, dispatch]);
 
@@ -115,10 +114,14 @@ export default function Table() {
       }).unwrap();
       // @ts-ignore
       console.log('rowResult:', rowResult.current);
-      if (rowResult) {
-        // @ts-ignore
-        dispatch(addRow({ parentId: parentId, row: rowResult.current }));
-      }
+      // @ts-ignore
+      dispatch(addRow({ parentId: parentId, row: rowResult.current }));
+      // @ts-ignore
+      const newData = [...rows, rowResult.current];
+      console.log('New data:', newData);
+      const treeRows = buildTree(newData);
+      console.log('Tree rows:', treeRows);
+      dispatch(setRows(treeRows));
     } catch (error) {
       console.error('Error creating row:', error);
     }

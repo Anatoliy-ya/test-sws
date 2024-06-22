@@ -18,11 +18,13 @@ const rowsSlice = createSlice({
     },
     addRow(state, action: PayloadAction<{ parentId: number | null; row: DataRowProps }>) {
       if (action.payload.parentId === null) {
+        console.log('Added row:', action.payload.row);
         state.rows.push(action.payload.row);
       } else {
         const addRowToParent = (rows: DataRowProps[]): boolean => {
           for (let row of rows) {
             if (row.id === action.payload.parentId) {
+              console.log(!row.child);
               if (!row.child) row.child = [];
               row.child.push(action.payload.row);
               return true;

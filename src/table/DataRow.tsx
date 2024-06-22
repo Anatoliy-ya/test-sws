@@ -3,8 +3,10 @@ import styles from './DataRow.module.scss';
 import Input from 'src/UI/Input';
 import { DataRowProps } from '../types/types';
 import { useUpdateRowMutation } from 'src/api/api';
-import { useDispatch } from 'react-redux';
-import { updateRow as updateRowAction } from 'src/store/slices/rowsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRows, updateRow as updateRowAction } from 'src/store/slices/rowsSlice';
+import { RootState } from 'src/store/store';
+import { buildTree } from 'src/utils/buildTree';
 import TextSnippetRoundedIcon from '@mui/icons-material/TextSnippetRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
@@ -32,6 +34,7 @@ export default function DataRow({
   onHandleCreateRow,
   isActiveDelete,
   eID,
+  level,
 }: RowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [rowNameChange, setRowNameChange] = useState<string>(rowName);
@@ -52,17 +55,16 @@ export default function DataRow({
     supportCosts,
   });
   const dispatch = useDispatch();
+  const rows = useSelector((state: RootState) => state.rows.rows);
   const [updateRow] = useUpdateRowMutation();
   const classDataRowChildren = `${styles.dataRow} ${styles.dataRowChildren}`;
-  const classDataRowIconChildren = `${
-    child && child.length > 0
-      ? styles.dataRowIcon
-      : `${styles.dataRowIcon} ${styles.dataRowIconChildren}`
-  }`;
+  const rowStyle = {
+    marginLeft: `${level! * 10}px`,
+  };
+  const classDataRowIconChildren = `${styles.dataRowIcon} ${rowStyle}`;
 
   useEffect(() => {
     setUpdatedRow({
-      parentId: parentId,
       rowName: rowNameChange,
       equipmentCosts: equipmentCosts + equipmentCostsChange,
       estimatedProfit: estimatedProfit + estimatedProfitChange,
@@ -78,14 +80,23 @@ export default function DataRow({
 
   const handleUpdateRow = async () => {
     try {
+      console.log('eID', eID);
       if (!eID) return;
       const result = await updateRow({
-        eID,
+        eID: eID,
         rID: id,
-        row: { ...updatedRow },
+        row: updatedRow,
       }).unwrap();
-      console.log('Updated row:', result);
-      dispatch(updateRowAction({ rID: id, updatedRow: { ...updatedRow } }));
+      // @ts-ignore
+      console.log('Updated row:', result.current);
+      // @ts-ignore
+      const resultUpdateRow = { ...result.current };
+      dispatch(updateRowAction({ rID: id, updatedRow: { ...resultUpdateRow } }));
+      const updatedRows = rows.map((row) => (row.id === id ? { ...row, ...resultUpdateRow } : row));
+      console.log('updatedRows', updatedRows);
+      const treeRows = buildTree(updatedRows);
+      console.log('dispatch setRows', treeRows);
+      dispatch(setRows(treeRows));
     } catch (error) {
       console.error('Error updating row:', error);
     }
@@ -109,7 +120,7 @@ export default function DataRow({
     <>
       <div className={styles.dataRow} onDoubleClick={handleDoubleClick}>
         <div className={styles.dataRowName}>
-          <div className={classDataRowIconChildren}>
+          <div className={classDataRowIconChildren} style={rowStyle}>
             <TextSnippetRoundedIcon
               className={styles.textSnippetRoundedIcon}
               onClick={handleCreateRowWrapper(id)}
@@ -162,10 +173,10 @@ export default function DataRow({
           </div>
         ) : (
           <div className={styles.dataRowData} onDoubleClick={handleDoubleClick}>
-            <p>{salary === 0 && ''}</p>
-            <p>{overheads === 0 && ''}</p>
-            <p>{equipmentCosts === 0 && ''}</p>
-            <p>{estimatedProfit === 0 && ''}</p>
+            <p>{salaryChange}</p>
+            <p>{overheadsChange}</p>
+            <p>{equipmentCostsChange}</p>
+            <p>{estimatedProfitChange}</p>
           </div>
         )}
       </div>
@@ -175,6 +186,7 @@ export default function DataRow({
             <DataRow
               key={childRow.id}
               {...childRow}
+              eID={eID}
               onHandleDeleteRow={() => onHandleDeleteRow(childRow.id)}
               onHandleCreateRow={() => onHandleCreateRow(childRow.id)}
               isActiveDelete={true}
