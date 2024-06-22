@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setRows, updateRow as updateRowAction } from 'src/store/slices/rowsSlice';
 import { RootState } from 'src/store/store';
 import { buildTree } from 'src/utils/buildTree';
+import { updateNestedRow } from 'src/utils/updateNestedRow';
 import TextSnippetRoundedIcon from '@mui/icons-material/TextSnippetRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
@@ -66,14 +67,14 @@ export default function DataRow({
   useEffect(() => {
     setUpdatedRow({
       rowName: rowNameChange,
-      equipmentCosts: equipmentCosts + equipmentCostsChange,
-      estimatedProfit: estimatedProfit + estimatedProfitChange,
+      equipmentCosts: equipmentCostsChange,
+      estimatedProfit: estimatedProfitChange,
       machineOperatorSalary,
       mainCosts,
       materials,
       mimExploitation,
-      overheads: overheads + overheadsChange,
-      salary: salary + salaryChange,
+      overheads: overheadsChange,
+      salary: salaryChange,
       supportCosts,
     });
   }, [rowNameChange, salaryChange, overheadsChange, equipmentCostsChange, estimatedProfitChange]);
@@ -88,14 +89,18 @@ export default function DataRow({
         row: updatedRow,
       }).unwrap();
       // @ts-ignore
-      console.log('Updated row:', result.current);
-      // @ts-ignore
       const resultUpdateRow = { ...result.current };
+
+      // @ts-ignore
+      console.log('Updated row:', result.current);
       dispatch(updateRowAction({ rID: id, updatedRow: { ...resultUpdateRow } }));
-      const updatedRows = rows.map((row) => (row.id === id ? { ...row, ...resultUpdateRow } : row));
+
+      const updatedRows = updateNestedRow(rows, id, resultUpdateRow);
       console.log('updatedRows', updatedRows);
+
       const treeRows = buildTree(updatedRows);
       console.log('dispatch setRows', treeRows);
+
       dispatch(setRows(treeRows));
     } catch (error) {
       console.error('Error updating row:', error);
@@ -116,6 +121,7 @@ export default function DataRow({
       handleUpdateRow();
     }
   };
+
   return (
     <>
       <div className={styles.dataRow} onDoubleClick={handleDoubleClick}>

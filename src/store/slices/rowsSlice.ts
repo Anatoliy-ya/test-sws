@@ -55,19 +55,18 @@ const rowsSlice = createSlice({
       deleteRowFromParent(state.rows);
     },
     updateRow(state, action: PayloadAction<{ rID: number; updatedRow: Partial<DataRowProps> }>) {
-      const updateRowInParent = (rows: DataRowProps[]): boolean => {
-        for (let row of rows) {
+      const updateRowInParent = (rows: DataRowProps[]): DataRowProps[] => {
+        return rows.map((row) => {
           if (row.id === action.payload.rID) {
-            Object.assign(row, action.payload.updatedRow);
-            return true;
+            return { ...row, ...action.payload.updatedRow };
           }
-          if (row.child && updateRowInParent(row.child)) {
-            return true;
+          if (row.child) {
+            return { ...row, child: updateRowInParent(row.child) };
           }
-        }
-        return false;
+          return row;
+        });
       };
-      updateRowInParent(state.rows);
+      state.rows = updateRowInParent(state.rows);
     },
   },
 });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './Table.module.scss';
 import {
   useGetRowsQuery,
@@ -15,7 +15,6 @@ import DataRow from './DataRow';
 import { RootState } from 'src/store/store';
 
 export default function Table() {
-  const [deleteRowState, setDeleteRowState] = useState<number>();
   const dispatch = useDispatch();
   const rows = useSelector((state: RootState) => state.rows.rows);
   const eID = useSelector((state: RootState) => state.entity.eID);
@@ -115,13 +114,10 @@ export default function Table() {
       // @ts-ignore
       console.log('rowResult:', rowResult.current);
       // @ts-ignore
-      dispatch(addRow({ parentId: parentId, row: rowResult.current }));
-      // @ts-ignore
-      const newData = [...rows, rowResult.current];
+      const newData = buildTree(rows, parentId, rowResult.current);
       console.log('New data:', newData);
-      const treeRows = buildTree(newData);
-      console.log('Tree rows:', treeRows);
-      dispatch(setRows(treeRows));
+
+      dispatch(setRows(newData));
     } catch (error) {
       console.error('Error creating row:', error);
     }
@@ -132,7 +128,6 @@ export default function Table() {
       try {
         const result = await deleteRow({ eID: eID, rID: rID }).unwrap();
         console.log('Deleted row:', rID);
-        setDeleteRowState(rID);
         console.log('Deleted row:', result);
       } catch (error) {
         console.log('Error deleting row:', error);
