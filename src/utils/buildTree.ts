@@ -12,7 +12,9 @@ const assignLevelsAndAddRow = (
       level,
       child: row.child ? assignLevelsAndAddRow(row.child, level + 1, parentId, newRow) : [],
     };
-
+    const sortedRows = updatedRow.child.sort((a, b) => a.level! - b.level!);
+    updatedRow.child = sortedRows;
+    console.log('updatedRow', updatedRow);
     if (newRow && row.id === parentId) {
       updatedRow.child = [...updatedRow.child, { ...newRow, level: level + 1 }];
     }
